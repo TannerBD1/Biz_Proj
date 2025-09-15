@@ -54,7 +54,7 @@ def notify_party(message):
     shop = "Small Franchis"
     return message
 
-def create_csvs_for_symbols(inventory_list):
+def create_csvs_for_items(inventory_list):
     return inventory_list
 def compare_all_variances_for_all_item(inventory_list):
     return inventory_list
@@ -62,7 +62,7 @@ def compare_all_variances_for_all_item(inventory_list):
 def main():
 #   create CSVs 
     inventory_list = []
-    create_csvs_for_symbols(inventory_list)
+    create_csvs_for_items(inventory_list)
     compare_all_variances_for_all_item(inventory_list)
 if __name__ == "__main__":
     main()
