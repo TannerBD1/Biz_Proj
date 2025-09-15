@@ -37,6 +37,7 @@ def item_selection(inventory):
     freezer_items = [710, 739, 788]
     fridge_items = [510, 539, 588]
     dry_items = [210, 239, 288]
+    return inventory
 
 
 def detect_variance(variance):
@@ -45,12 +46,23 @@ def detect_variance(variance):
     surp_defic = last_proj-last_actual
     var2 = 0
     calculate = surp_defic - var2
+    return variance
 
 def notify_party(message):
     distributor = "Big Brand"
 
     shop = "Small Franchis"
+    return message
 
+def create_csvs_for_symbols(inventory_list):
+    return inventory_list
+def compare_all_variances_for_all_item(inventory_list):
+    return inventory_list
 
 def main():
-    if name == (__main__):
+#   create CSVs 
+    inventory_list = []
+    create_csvs_for_symbols(inventory_list)
+    compare_all_variances_for_all_item(inventory_list)
+if __name__ == "__main__":
+    main()
