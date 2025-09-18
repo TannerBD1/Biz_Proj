@@ -62,8 +62,19 @@ def main():
     updated_item = input("What item is being updated (target_list)?: ")
     select_list(updated_item)
     alert = notify_party("positive")
-    with open('results.json', 'w') as f:
-        json.dump(inventory_list, f, indent=4)
+# Read existing data
+    try:
+        with open("data.json", "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = []  # Start with an empty list if file doesn't exist
+
+# Append new data
+    data.append(updated_item)
+
+# Write updated data back
+    with open("data.json", "w") as file:
+        json.dump(data, file, indent=4)
     return 
 if __name__ == "__main__":
     main()
