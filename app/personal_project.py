@@ -1,80 +1,72 @@
-import requests, json
-print('< TITLE > hello world </ TITLE >')
-freezer_items = []
-fridge_items = []
-dry_items = []
-inventory_list = []
-def sort_cat(if_zone):
+import json
+import os
+# Inventory storage as dictionary for item zones
+inventory = {
+    "freezer": [],
+    "fridge": [],
+    "dry": []
+}
+def input_items(zone):
+    print("\n...Update in Progress...\n")
     while True:
-        print("Updating items")
-        if if_zone == '1':
-            freezer_items.append(if_zone)
-            break
-        elif if_zone == '2':
-            fridge_items.append(if_zone)
-            break
-        if if_zone == '3':
-            dry_items.append(if_zone)
+        create_cycle = input('Input an item(y/n): ')
+        if create_cycle == 'y':
+            list_item = input('What is the item?; ')
+            inventory[zone].append(list_item)
+        elif create_cycle == 'n' or create_cycle == '':
             break
         else:
-            print('That was not valid input')
-            break
+            print('invalid input')
     return
-def select_list(updated_item):
-    if updated_item == 'freezer_list':
-        selection = (710, 739, 788)
-        inventory_list.append(selection)
-    elif updated_item == 'fridge_list':
-        selection = (510, 539, 588)
-        inventory_list.append(selection)
-    elif updated_item == 'dry_list':
-        selection = (210, 239, 288)
-        inventory_list.append(selection)
+def output_items(zone):
+    if zone in inventory:
+        print(f"\n{zone.title()} items:", inventory[zone])
+    elif zone == 'n':
+        print("Full inventory:", inventory)
+    else:
+        print('invalid input')
     return
-def weekly_order(items):
-    while True:
-        item = input("What item is being updated: ")
-        add = input(f"How many of {item} per order: ")
-    return
-def detect_variance(variance):
-    last_proj = 0
-    last_actual = 0
-    surp_defic = last_proj-last_actual
-    var2 = 0
-    calculate = surp_defic - var2
-    with open('results.json', 'r') as f:
-        json.load(calculate, f, indent=4)
-    return
-def notify_party(message):
-    distributor = "Big Brand"
-    print(f"system: {distributor} this is the current detection ({message})")
-    shop = "Small Franchise"
-    print(f"system: {shop} this is the current detection ({message})")
+def select_list(zone):
+    if zone in inventory:
+        selection = input('Enter 3 numbers: ')
+        sys_select = f"{inventory[zone]}; {selection}"
+        inventory[zone].append(sys_select)
+    else:
+        print('invalid zone')
     return
 def create_save_for_inventory():
-    updated_data = inventory_list
-    with open('results.json', 'w') as f:
-        json.dump(updated_data, f, indent=4)
-    return 
-def main():
-    locate = input("What zone is this in? \n1. Freezer\n2. Fridge\n3. Dry\n(Enter Number Only): ")
-    sort_cat(locate)
-    updated_item = input("What item is being updated (target_list)?: ")
-    select_list(updated_item)
-    alert = notify_party("positive")
-# Read existing data
+    # Save inventory to JSON file
+    try:
+        with open("data.json", "w") as file:
+            json.dump(inventory, file, indent=4)
+        print("Inventory saved.")
+    except Exception as e:
+        print("Error saving inventory:", e)
+def load_inventory():
+    # Load inventory from JSON file if exists
     try:
         with open("data.json", "r") as file:
             data = json.load(file)
-    except FileNotFoundError:
-        data = []  # Start with an empty list if file doesn't exist
-
-# Append new data
-    data.append(updated_item)
-
-# Write updated data back
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-    return 
+            if isinstance(data, dict):
+                inventory.update(data)
+            else:
+                print("Invalid data format in data.json; skipping load.")
+    except Exception as e:
+        print("Error loading inventory:", e)
+def main():
+    load_inventory()
+    zone_map = {"1": "freezer", "2": "fridge", "3": "dry"}
+    chk_zone = input("What zone is this in? \n1. Freezer\n2. Fridge\n3. Dry\n(Enter Number Only): ")
+    if chk_zone in zone_map:
+        input_items(zone_map[chk_zone])
+    updated_zone = input("What zone is being updated?: ")
+    if updated_zone in zone_map.values():
+        select_list(updated_zone)
+    target_zone = input('Specify zone?(1,2,3 or n); ')
+    if target_zone in zone_map:
+        output_items(zone_map[target_zone])
+    elif target_zone == 'n':
+        output_items('n')
+    create_save_for_inventory()
 if __name__ == "__main__":
     main()
